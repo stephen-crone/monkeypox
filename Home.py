@@ -206,7 +206,7 @@ def classify_tweets(dataframe_to_classify:pd.DataFrame):
     return tweet_dict
 
 
-def get_user_tweets(user_id:int|str, days_to_go_back:int, client:tw.Client):
+def get_user_tweets(user_id:str, days_to_go_back:int, client:tw.Client):
     """
     If the initial tweet provided to the web app is classified as
     misleading, then relevant tweets from the user must be gathered
