@@ -64,7 +64,7 @@ def load_client():
     Returns: Tweepy client.
     """
 
-    bearer_token = "AAAAAAAAAAAAAAAAAAAAAA4QagEAAAAAF0ABGchtVcJCyEqlMkNwzOStJmE%3D1tHbOkgtVSFypBdQIYWJIgqCio3qFw9GOSSxZIno3gaOTLKfp6"
+    bearer_token = st.secrets["bearer_token"]
     client = tw.Client(bearer_token,wait_on_rate_limit=True)
     return client
 
