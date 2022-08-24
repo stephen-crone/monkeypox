@@ -30,7 +30,7 @@ def load_model():
     Returns: HuggingFace transformer model.
     """
 
-    model = TFAutoModelForSequenceClassification.from_pretrained("smcrone/monkeypox-misinformation")
+    model = TFAutoModelForSequenceClassification.from_pretrained("smcrone/mpox-misinformation-detector")
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=5e-6),
         loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -49,7 +49,7 @@ def load_tokenizer():
     Returns: tokenizer.
     """
 
-    tokenizer = AutoTokenizer.from_pretrained("bert-large-uncased",use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained("smcrone/mpox-misinformation-detector",use_fast=False)
     return tokenizer
 
 
