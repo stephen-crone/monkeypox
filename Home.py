@@ -49,7 +49,7 @@ def load_tokenizer():
     Returns: tokenizer.
     """
 
-    tokenizer = AutoTokenizer.from_pretrained("smcrone/monkeypox-misinformation",use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained("bert-large-uncased",use_fast=False)
     return tokenizer
 
 
