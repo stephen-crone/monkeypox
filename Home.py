@@ -30,7 +30,7 @@ def load_model():
     Returns: HuggingFace transformer model.
     """
 
-    model = TFAutoModelForSequenceClassification.from_pretrained("smcrone/mpox-misinformation-detector")
+    model = TFAutoModelForSequenceClassification.from_pretrained("smcrone/monkeypox-misinformation")
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=5e-6),
         loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -49,7 +49,7 @@ def load_tokenizer():
     Returns: tokenizer.
     """
 
-    tokenizer = AutoTokenizer.from_pretrained("smcrone/mpox-misinformation-detector",use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained("smcrone/monkeypox-misinformation",use_fast=False)
     return tokenizer
 
 
@@ -446,7 +446,8 @@ def webpage():
             poster can be considered a misinformation superspreader.")
 
     st.sidebar.subheader("About")
-    st.sidebar.write("This app has been developed using a transformer\
+    st.sidebar.write("This app has been developed using a\
+                     [COVID-Twitter-BERT](https://huggingface.co/digitalepidemiologylab/covid-twitter-bert-v2)\
                      model fine-tuned on a monkeypox misinformation\
                      dataset. Users can learn more about the\
                      [model](https://www.bbc.co.uk/sport) on the\
