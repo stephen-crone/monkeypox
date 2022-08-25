@@ -1,0 +1,195 @@
+import numpy as np
+
+def spreader_score(num_posts:int, num_followers:int, num_retweets:int,
+                  posts_weight:float, folls_weight:float,
+                  retweets_weight:float, posts_exp:float,
+                  folls_exp: float, retweets_exp: float):
+    """
+    This function calculates, on a scale from zero to one, how big a
+    superspreader a user can be considered to be, based on values
+    provided to the function at runtime.
+
+    Parameters:
+
+    1. num_posts: the number of misleading posts by the account.
+    2. num_followers: the number of followers that the account has.
+    3. num_retweets: total retweets received by the offending tweets.
+    4. posts_weight: scalar weight for num_posts between 0-1.
+    5. folls_weight: scalar weight for num_followers between 0-1.
+    6. retweets_weight: scalar weight for num_retweets between 0-1.
+    7. posts_exp: the power to apply to the posts value.
+    8. folls_exp: the power to apply to the followers value.
+    9. retweets_exp: the power to apply to the retweets value.
+
+    Returns:
+
+    1. spreader_score: a value between 0-1, where higher values
+    denote bigger superspreaders.
+    """
+
+    # Defining posts (p), followers (f) and retweets (r).
+    p = (posts_weight * num_posts) ** posts_exp
+    f = (folls_weight * (np.log10(num_followers+1))) ** folls_exp
+    r = (retweets_weight * (np.log10(num_retweets+1))) ** retweets_exp
+    # Calculating superspreader score.
+    spreader_score = max(((1 - (1/(max(1,p+f+r))))*100),1)
+    return spreader_score
+
+
+def find_weights(post_weight_vals:list,fol_weight_vals:list,
+                retweet_weight_vals:list, post_exp_vals: list,
+                folls_exp_vals: list, retweets_exp_vals: list, 
+                profile_archetypes:dict, desired_outputs:dict):
+    """"
+    The aim of this function is to exhaustively search a range of weight
+    values, using the spreader_score function in order to find the
+    weights for the spreader_score function that best approximate the
+    distribution desired. The user supplies a dictionary of archetypal
+    users and the desired outputs for these users. The function then
+    computes the sum of absolute cubed errors for the dictionary of
+    archetypal users, for all possible combinations of weight values.
+    It returns the weight values that minimise the sum of absolute
+    cubed errors. (Absolute cubed error is used over squared error in
+    order to punish outliers to an even greater extent.)
+
+    Parameters:
+
+    1. post_weight_vals: list of scalar weights to consider.
+    2. fol_weight_vals: list of scalar weights to consider.
+    3. retweet_weight_vals: list of scalar weights to consider.
+    4. post_exp_vals: list of exponential weights to consider.
+    5. folls_exp_vals: list of exponential weights to consider.
+    6. retweets_exp_vals: list of exponential weights to consider.
+    7. profile_archetypes: dictionary of user types (x values).
+    8. desired_outputs: dictionary of desired outputs (y values).
+
+    Returns:
+
+    1. A list containing the ideal weights.
+
+    """
+
+    # Define a minimum_error variable and set it initially to an
+    # arbitrarily high value.
+    minimum_error = 99999999
+    # Using nested for loops, consider all combinations of weights.
+    for a in post_weight_vals:
+        posts_weight = a
+        for b in fol_weight_vals:
+            folls_weight = b
+            for c in retweet_weight_vals:
+                retweets_weight = c
+                for d in post_exp_vals:
+                    posts_exp = d
+                    for e in folls_exp_vals:
+                        folls_exp = e
+                        for f in retweets_exp_vals:
+                            retweets_exp = f
+                            # For each combination, compute superspreader
+                            # scores for the archetypal users provided.
+                            scores_dict = {}
+                            for user_name, user_value in profile_archetypes.items():
+                                scores_dict[user_name] = spreader_score(num_posts=user_value[0],
+                                                                num_followers=user_value[1],
+                                                                num_retweets=user_value[2],
+                                                                posts_weight=posts_weight,
+                                                                folls_weight=folls_weight,
+                                                                retweets_weight=retweets_weight,
+                                                                posts_exp=posts_exp,
+                                                                folls_exp=folls_exp,
+                                                                retweets_exp=retweets_exp)
+                            # Calculate the absolute cubed differences between 
+                            # the values generated by the function and the
+                            # desired values.
+                            scores_array = np.array(list(scores_dict.values()))
+                            ideal_array = np.array(list(desired_outputs.values()))
+                            difference = np.subtract(scores_array,ideal_array)
+                            abs_cubed_diff = abs(difference * difference * difference)
+                            # Take the sum of the differences.
+                            sum_cubed_diff = np.sum(abs_cubed_diff)
+                            # If this is the smallest error recorded so far,
+                            # change the value of minimum_error accordingly
+                            # and store the weight values.
+                            if sum_cubed_diff < minimum_error:
+                                minimum_error = sum_cubed_diff
+                                ideal_posts_weight = posts_weight
+                                idea_folls_weight = folls_weight
+                                ideal_retweets_weight = retweets_weight
+                                ideal_posts_exp = posts_exp
+                                ideal_folls_exp = folls_exp
+                                ideal_retweets_exp = retweets_exp
+    # At the end of the search process, return the ideal weight values.
+    return [ideal_posts_weight, idea_folls_weight, ideal_retweets_weight,
+            ideal_posts_exp, ideal_folls_exp, ideal_retweets_exp,
+            minimum_error]
+
+
+def main():
+    """
+    In this function, we establish a set of weight values to explore, a
+    dictionary of archetypal users to use, and a dictionary of desired
+    outputs for each user. The function then calls the find_weights
+    function and prints the details of the best weights.
+
+    Parameters: none.
+    Returns: nothing.
+    """
+
+    # Setting range of weight values to explore.
+    post_weight_vals = [0.20, 0.21, 0.22]
+    fol_weight_vals = [0.24, 0.25, 0.26]
+    retweet_weight_vals = [1.03, 1.04, 1.05]
+    post_exp_vals = [1.12, 1.13, 1.14]
+    folls_exp_vals = [4.72, 4.73, 4.74]
+    retweets_exp_vals = [0.95, 0.96, 0.97]
+    # Creating dictionary of archetypal users (x values).
+    profile_archetypes = {"User A": [5,100000,10000],
+                          "User B": [5,100000, 10],
+                          "User C": [1,100000,10000],
+                          "User D": [5,100,10000],
+                          "User E": [1,100000,10],
+                          "User F": [1,100,10000],
+                          "User G": [5,100,10],
+                          "User H": [1,100,10],
+                          "User I": [1,10,0]}
+    # Creating dictionary of desired outputs (y values).
+    desired_outputs = {"User A": 95,
+                       "User B": 85,
+                       "User C": 85,
+                       "User D": 85,
+                       "User E": 70,
+                       "User F": 70,
+                       "User G": 50,
+                       "User H": 25,
+                       "User I": 5}
+    # Calling find_weights function.
+    pWeight, fWeight, rWeight, pExp, fExp, rExp, minError = find_weights(post_weight_vals=post_weight_vals,
+                                                                        fol_weight_vals=fol_weight_vals,
+                                                                        retweet_weight_vals=retweet_weight_vals,
+                                                                        post_exp_vals=post_exp_vals,
+                                                                        folls_exp_vals=folls_exp_vals,
+                                                                        retweets_exp_vals=retweets_exp_vals,
+                                                                        profile_archetypes=profile_archetypes,
+                                                                        desired_outputs=desired_outputs)
+    # Printing results of search.
+    print("*"*30)
+    print("Our winning parameters")
+    print("*"*30)
+    print("pWeight:",pWeight,"fWeight:",fWeight,"rWeight:",rWeight,
+          "pExp:",pExp,"fExp:",fExp,"rExp:",rExp)
+    print("\n")
+    print("*"*30)
+    print("Mean absolute cubed error for these weights")
+    print("*"*30)
+    print(minError)
+    print("\n")
+    print("*"*30)
+    print("Superspreader scores for the archetypal profiles using these weights")
+    print("*"*30)
+    for key, val in profile_archetypes.items():
+        print(key)
+        print(spreader_score(val[0],val[1],val[2],pWeight,fWeight,rWeight,pExp,fExp,rExp))
+
+
+if __name__ == "__main__":
+    main()
