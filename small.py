@@ -509,6 +509,7 @@ def webpage():
                 for i in range(len(classified_user_tweets['badPosts'])):
                     recent_tweet = classified_user_tweets['badPosts'][i][0]
                     recent_tweet = recent_tweet.split('text:')[-1]
+                    recent_tweet = recent_tweet.split('[SEP]')[0]
                     superspreader_container.markdown('<p style="background-color: #F0F2F6; padding: 8px 8px 8px 8px;">{}</p>'.format(recent_tweet),unsafe_allow_html=True)
         except:
             st.error("Could not retrieve information for tweet. Please ensure you are supplying a valid tweet ID or URL.")
