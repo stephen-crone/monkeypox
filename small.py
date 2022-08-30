@@ -35,6 +35,7 @@ def load_model():
         optimizer=tf.keras.optimizers.Adam(learning_rate=5e-6),
         loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
         metrics=tf.keras.metrics.SparseCategoricalAccuracy())
+        model.get_layer('dropout_73').rate = 0.2
     return model
 
 
