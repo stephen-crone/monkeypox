@@ -380,7 +380,7 @@ def on_receipt_of_tweet_query(request:str,client:tw.Client):
     followers_count = tweet_df['followers_count'][0]
     # Preprocess the data using dedicated functions.
     tweet_df = dataframe_preprocessing(tweet_df)
-    concatenated_tweet_df = feature_concatenation(tweet_df,['text'])
+    concatenated_tweet_df = feature_concatenation(tweet_df,['text','user is verified'])
 
     # STAGE 3. CALLING CLASSIFIER AND DETERMINING NEXT STEPS
 
