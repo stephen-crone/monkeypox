@@ -300,7 +300,7 @@ def get_user_tweets(user_id:str, days_to_go_back:int, client:tw.Client):
     user_df['monkeypox'] = user_df['text'].str.contains('monkeypox|monkey pox|money pox', case=False, regex=True)
     user_df.drop(user_df[user_df.monkeypox == False].index, inplace=True)
     # Concatenating chosen features.
-    concatenated_df = feature_concatenation(user_df,['text'])
+    concatenated_df = feature_concatenation(user_df,['text','user is verified'])
     
     # STAGE 3. CALLING CLASSIFIER AND RETURNING RESULTS
 
