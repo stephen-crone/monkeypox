@@ -450,11 +450,11 @@ def webpage():
                      [COVID-Twitter-BERT](https://huggingface.co/digitalepidemiologylab/covid-twitter-bert-v2)\
                      model fine-tuned on a monkeypox misinformation\
                      dataset. Users can learn more about the\
-                     [model](https://www.bbc.co.uk/sport) on the\
+                     [model](https://huggingface.co/smcrone/monkeypox-misinformation) on the\
                      HuggingFace model repository and can explore on\
                      Kaggle the [dataset](https://www.kaggle.com/datasets/stephencrone/monkeypox)\
                      on which the model was trained. Further\
-                     [documentation](https://www.kaggle.com/datasets/stephencrone/monkeypox),\
+                     [documentation](https://github.com/stephen-crone/monkeypox),\
                      as well as the source code for the app, can be\
                      found in the project's GitHub repository.")
 
