@@ -50,7 +50,7 @@ These experiments were conducted in three rounds (each focusing on optimising a 
 2. Round 2 file names capture: (i) the name of the model used; and (ii) the combination of dataset features that were concatenated and fed into the transformer model.
 3. Round 3 file names capture (i) the name of the model used; and (ii) the alteration made to default hyperparameters.
 
-The contents of files from all three rounds is fundamentally the same. One sheet contains the data collected from training; the other contains a classification report from evaluation of the model on test data. In terms of the features of the training data sheet, see the following explanatory notes:
+The content of files from all three rounds is fundamentally the same. One sheet contains the data collected from training; the other contains a classification report from evaluation of the model on test data. In terms of the features of the training data sheet, see the following explanatory notes:
 
 | Column name | Description |
 |-------------|-------------|
