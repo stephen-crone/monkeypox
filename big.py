@@ -344,6 +344,8 @@ def on_receipt_of_tweet_query(request:str,client:tw.Client):
     # If URL is provided by the end-user, strip out the tweet ID.
     if '/' in request:
         request = request.split('/')[-1]
+    if '?' in request:
+        request = request.split('?')[0]
     # Collect tweet data -- interrupt if invalid input provided.
     tweet = client.get_tweets(ids=request,
                               expansions=['author_id'],
