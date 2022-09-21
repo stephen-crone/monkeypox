@@ -85,7 +85,7 @@ def dataframe_preprocessing(df_to_preprocess:pd.DataFrame):
     Returns: df_to_preprocess (DataFrame)
     """
 
-    # userlocation will not be in dataframe is user not supplied field. So, for time being, fill with none if it does not exist.
+    # userlocation will not be in dataframe if user has not supplied field. So, for time being, fill with none if it does not exist.
     # !!! note: we will likely NOT use userlocation, so can remove this bit of code in later versions!!!
     if 'userlocation' not in df_to_preprocess.columns:
         df_to_preprocess['userlocation'] = 'None'
