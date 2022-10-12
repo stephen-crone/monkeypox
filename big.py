@@ -471,50 +471,50 @@ def webpage():
     tweet_to_check = st.text_input("Please provide a tweet URL or ID", key="name")
     # If the string provided by the user is empty, do nothing.
     if tweet_to_check != "":
-        # Otherwise, if string is not empty, try fetching tweet using function.
-        try:
-            classified_tweet, tweet_text, followers_count, classified_user_tweets, retweets_total, spreader_score = on_receipt_of_tweet_query(tweet_to_check,client)
-            st.markdown("""<hr style="height:1px;border:none;background-color:#a6a6a6; margin-top:16px; margin-bottom:20px;" /> """, unsafe_allow_html=True)
-            col1, col2 = st.columns(2)
-            # In left column, present tweet text.
-            col1.subheader("Tweet")
-            tweet_text = textacy.preprocessing.normalize.whitespace(tweet_text)
-            col1.markdown('<p style="background-color: #F0F2F6; padding: 8px 8px 8px 8px;">{}{}</p>'.format(tweet_text,type(tweet_text)),unsafe_allow_html=True)
-            # In right column, present tweet classification.
-            col2.subheader("Rating for this tweet")
-            if len(classified_tweet['goodPosts']) != 0:
-                # Format blue for not misinformation.
-                col2.markdown('<p style="color:White; background-color: #1661AD; text-align: center; font-size: 20px;">Not misinformation</p>',unsafe_allow_html=True)
-                col2.markdown('<p style="font-size: 40px; text-align: center;">{}</p>'.format(format(classified_tweet['goodPosts'][0][2],'.0%')), unsafe_allow_html=True)
-                col2.markdown('<p style="text-align: center;">confidence level</p>', unsafe_allow_html=True)
-            else:
-                # Format red for misinformation.
-                col2.markdown('<p style="color:White; background-color: #701B20; text-align: center; font-size: 20px;">Misinformation</p>',unsafe_allow_html=True)
-                col2.markdown('<p style="font-size: 40px; text-align: center;">{}</p>'.format(format(classified_tweet['badPosts'][0][2],'.0%')), unsafe_allow_html=True)
-                col2.markdown('<p style="text-align: center;">confidence level</p>', unsafe_allow_html=True)
-                # Add additional container to display superspreader analysis.
-                superspreader_container = st.container()
-                superspreader_container.subheader("Superspreader rating for this user")
-                # Plot the superspreader score as a bar chart.
-                score_to_plot = pd.DataFrame({"classified_tweet":["score"],"spreader_score":[spreader_score]})
-                bar = alt.Chart(score_to_plot).mark_bar().encode(alt.X('spreader_score:Q',scale=alt.Scale(domain=(0, 100)), axis=None), alt.Y('classified_tweet',axis=None)).properties(height=60)
-                if spreader_score > 10:
-                    label = bar.mark_text(align='right',baseline='middle', dx=-10, color='white', fontSize=20).encode(text=alt.Text("spreader_score:Q", format=",.0f"))
-                else:
-                    label = bar.mark_text(align='right',baseline='middle', dx=25, color='black', fontSize=20).encode(text=alt.Text("spreader_score:Q", format=",.0f"))
-                x = bar+label
-                x = x.configure_mark(color='#701B20')
-                superspreader_container.altair_chart(x, use_container_width=True)
-                # Display stats on which calculation was based.
-                superspreader_container.write("Based on the user's **{:,} followers** and the following **{} tweet(s)** published over the last two weeks, which together received **{:,} retweet(s)**.".format(followers_count,len(classified_user_tweets['badPosts']),retweets_total))
-                # And print offending tweets from user's recent history.
-                for i in range(len(classified_user_tweets['badPosts'])):
-                    recent_tweet = classified_user_tweets['badPosts'][i][0]
-                    recent_tweet = recent_tweet.split('text:')[-1]
-                    recent_tweet = recent_tweet.split('[SEP]')[0]
-                    superspreader_container.markdown('<p style="background-color: #F0F2F6; padding: 8px 8px 8px 8px;">{}</p>'.format(recent_tweet),unsafe_allow_html=True)
-        except:
-            st.error("Could not retrieve information for tweet. Please ensure you are supplying a valid tweet ID or URL.")
+#         # Otherwise, if string is not empty, try fetching tweet using function.
+#         try:
+          classified_tweet, tweet_text, followers_count, classified_user_tweets, retweets_total, spreader_score = on_receipt_of_tweet_query(tweet_to_check,client)
+          st.markdown("""<hr style="height:1px;border:none;background-color:#a6a6a6; margin-top:16px; margin-bottom:20px;" /> """, unsafe_allow_html=True)
+          col1, col2 = st.columns(2)
+          # In left column, present tweet text.
+          col1.subheader("Tweet")
+          tweet_text = textacy.preprocessing.normalize.whitespace(tweet_text)
+          col1.markdown('<p style="background-color: #F0F2F6; padding: 8px 8px 8px 8px;">{}{}</p>'.format(tweet_text,type(tweet_text)),unsafe_allow_html=True)
+          # In right column, present tweet classification.
+          col2.subheader("Rating for this tweet")
+          if len(classified_tweet['goodPosts']) != 0:
+              # Format blue for not misinformation.
+              col2.markdown('<p style="color:White; background-color: #1661AD; text-align: center; font-size: 20px;">Not misinformation</p>',unsafe_allow_html=True)
+              col2.markdown('<p style="font-size: 40px; text-align: center;">{}</p>'.format(format(classified_tweet['goodPosts'][0][2],'.0%')), unsafe_allow_html=True)
+              col2.markdown('<p style="text-align: center;">confidence level</p>', unsafe_allow_html=True)
+          else:
+              # Format red for misinformation.
+              col2.markdown('<p style="color:White; background-color: #701B20; text-align: center; font-size: 20px;">Misinformation</p>',unsafe_allow_html=True)
+              col2.markdown('<p style="font-size: 40px; text-align: center;">{}</p>'.format(format(classified_tweet['badPosts'][0][2],'.0%')), unsafe_allow_html=True)
+              col2.markdown('<p style="text-align: center;">confidence level</p>', unsafe_allow_html=True)
+              # Add additional container to display superspreader analysis.
+              superspreader_container = st.container()
+              superspreader_container.subheader("Superspreader rating for this user")
+              # Plot the superspreader score as a bar chart.
+              score_to_plot = pd.DataFrame({"classified_tweet":["score"],"spreader_score":[spreader_score]})
+              bar = alt.Chart(score_to_plot).mark_bar().encode(alt.X('spreader_score:Q',scale=alt.Scale(domain=(0, 100)), axis=None), alt.Y('classified_tweet',axis=None)).properties(height=60)
+              if spreader_score > 10:
+                  label = bar.mark_text(align='right',baseline='middle', dx=-10, color='white', fontSize=20).encode(text=alt.Text("spreader_score:Q", format=",.0f"))
+              else:
+                  label = bar.mark_text(align='right',baseline='middle', dx=25, color='black', fontSize=20).encode(text=alt.Text("spreader_score:Q", format=",.0f"))
+              x = bar+label
+              x = x.configure_mark(color='#701B20')
+              superspreader_container.altair_chart(x, use_container_width=True)
+              # Display stats on which calculation was based.
+              superspreader_container.write("Based on the user's **{:,} followers** and the following **{} tweet(s)** published over the last two weeks, which together received **{:,} retweet(s)**.".format(followers_count,len(classified_user_tweets['badPosts']),retweets_total))
+              # And print offending tweets from user's recent history.
+              for i in range(len(classified_user_tweets['badPosts'])):
+                  recent_tweet = classified_user_tweets['badPosts'][i][0]
+                  recent_tweet = recent_tweet.split('text:')[-1]
+                  recent_tweet = recent_tweet.split('[SEP]')[0]
+                  superspreader_container.markdown('<p style="background-color: #F0F2F6; padding: 8px 8px 8px 8px;">{}</p>'.format(recent_tweet),unsafe_allow_html=True)
+#         except:
+#             st.error("Could not retrieve information for tweet. Please ensure you are supplying a valid tweet ID or URL.")
     st.markdown("""<hr style="height:1px;border:none;background-color:#a6a6a6; margin-top:16px; margin-bottom:20px;" /> """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
