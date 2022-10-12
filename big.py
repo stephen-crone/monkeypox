@@ -95,7 +95,7 @@ def dataframe_preprocessing(df_to_preprocess:pd.DataFrame):
     df_to_preprocess['created_at'] = df_to_preprocess['created_at'].dt.tz_localize(None)
     df_to_preprocess['usercreated_at'] = df_to_preprocess['usercreated_at'].dt.tz_localize(None)
     # Replacing URLs and emojis; normalizing bullet points, whitespace, etc.
-    for feature in ['text','userdescription','userlocation','userurl','username']:
+    for feature in ['text','userdescription','userlocation','username']:
         df_to_preprocess[feature] = df_to_preprocess[feature].fillna('None').apply(str)
         df_to_preprocess[feature] = df_to_preprocess[feature].apply(lambda x: textacy.preprocessing.replace.urls(text= x, repl= '_URL_'))
         df_to_preprocess[feature] = df_to_preprocess[feature].apply(lambda x: emoji.demojize(x))
@@ -105,7 +105,6 @@ def dataframe_preprocessing(df_to_preprocess:pd.DataFrame):
         df_to_preprocess[feature] = df_to_preprocess[feature].replace('\n', ' ', regex=True).replace('\r', '', regex=True)
     # Renaming columns (for greater model intelligibility).
     df_to_preprocess.rename(columns={"userverified": "user is verified",
-                        "userurl": "user has url",
                         "userdescription": "user description",
                         "usercreated_at": "user created at",
                         "followers_count": "followers count",
@@ -113,8 +112,6 @@ def dataframe_preprocessing(df_to_preprocess:pd.DataFrame):
                         "tweet_count": "tweet count",
                         "userlocation": "user location"},
                         inplace=True)
-    # Making URL column binary.
-    df_to_preprocess['user has url'].replace({'_URL_': 'True', "": 'False'}, inplace=True)
     # Adding some extra features.
     df_to_preprocess['years since account created'] = df_to_preprocess['created_at'].dt.year.astype('Int64') - df_to_preprocess['user created at'].dt.year.astype('Int64')
     df_to_preprocess['tweets per day'] = df_to_preprocess['tweet count']/((df_to_preprocess['created_at'] - df_to_preprocess['user created at']).dt.days)
@@ -257,7 +254,7 @@ def get_user_tweets(user_id:str, days_to_go_back:int, client:tw.Client):
                                                start_time='{}-{}-{}T{}:00:00Z'.format(year,month,day,hour),
                                                tweet_fields=['author_id','created_at','public_metrics','source'],
                                                until_id=None,
-                                               user_fields=['created_at','description','location','public_metrics','url','verified'],
+                                               user_fields=['created_at','description','location','public_metrics','verified'],
                                                user_auth=False,
                                                limit=500)
     except:
